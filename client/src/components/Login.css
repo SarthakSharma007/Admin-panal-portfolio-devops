@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Inter:wght@300;400;600&display=swap');
+
+.login-ultimate-wrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: #050505;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Pure Dark Background */
+.pure-dark-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: radial-gradient(circle at center, #0a0a0c 0%, #000000 100%);
+  overflow: hidden;
+}
+
+/* Subtle glowing orbs */
+.ambient-orb {
+  position: absolute;
+  width: 30vw;
+  height: 30vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 242, 255, 0.15) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+/* Ultimate Dark Glass Card */
+.login-ultimate-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 400px;
+  background: rgba(15, 15, 15, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 242, 255, 0.2);
+  border-radius: 4px; /* Sharp edges */
+  padding: 3rem 2.5rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 242, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stark-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.stark-logo .main {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: 0.6rem;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.stark-logo .sub {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.8rem;
+  color: #00f2ff;
+  text-shadow: 0 0 10px rgba(0, 242, 255, 0.4);
+}
+
+.card-header h2 {
+  font-size: 0.9rem;
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.15rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.ultimate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.input-group label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #00f2ff;
+  letter-spacing: 0.15rem;
+  opacity: 0.8;
+}
+
+.input-group input {
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px; /* Sharp edges */
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  transition: all 0.4s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #00f2ff;
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+}
+
+.ultimate-btn {
+  margin-top: 1rem;
+  padding: 0.9rem; /* Reduced height */
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); /* Professional subdued blue */
+  color: #fff;
+  border: none;
+  border-radius: 2px; /* Sharp edges */
+  font-weight: 600; /* Adjusted for Inter's weight balance */
+  font-size: 0.95rem;
+  letter-spacing: 0.1rem; /* More professional spacing */
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(29, 78, 216, 0.2);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ultimate-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(29, 78, 216, 0.3);
+  filter: brightness(1.1);
+}
+
+/* Loading Animation Styles */
+.button-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out Infinity;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-msg {
+  background: rgba(255, 0, 85, 0.1);
+  border: 1px solid rgba(255, 0, 85, 0.3);
+  color: #ff0055;
+  padding: 1.2rem;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.card-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.card-footer span {
+  font-size: 0.65rem;
+  color: #555;
+  letter-spacing: 0.2rem;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .login-ultimate-card {
+    padding: 2.5rem;
+    max-width: 90%;
+  }
+}
