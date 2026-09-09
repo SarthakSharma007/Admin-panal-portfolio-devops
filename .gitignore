@@ -1,37 +1,98 @@
-# Dependency directories
-node_modules/
-client/node_modules/
-server/node_modules/
+# ==============================================================================
+# Gitignore — AdminPanel (DevOps Portfolio Management)
+# Production-Hardened Security & Build Hygiene
+# ==============================================================================
 
-# Production React builds
-client/build/
-client/dist/
-build/
-dist/
-
-# Environment Variables & Secrets (Database Credentials, JWT keys, etc.)
+# ------------------------------------------------------------------------------
+# 1. Environment Variables & Secrets (CRITICAL SECURITY)
+# ------------------------------------------------------------------------------
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
 *.env
 *.env.*
 server/.env
+client/.env
+!.env.example
+!env.example
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+id_rsa*
+.npmrc
+.yarnrc
 
-# Local Uploads & Static Files (Dynamic images uploaded via admin panel)
+# ------------------------------------------------------------------------------
+# 2. Dependency Directories
+# ------------------------------------------------------------------------------
+node_modules/
+client/node_modules/
+server/node_modules/
+jspm_packages/
+web_modules/
+
+# ------------------------------------------------------------------------------
+# 3. Dynamic Uploads & Static User Files
+# ------------------------------------------------------------------------------
 server/uploads/*
 !server/uploads/.gitkeep
+client/public/uploads/*
+!client/public/uploads/.gitkeep
+uploads/
 
-# Logs and Debug files
+# ------------------------------------------------------------------------------
+# 4. Local One-Off Migration, Seeding & Database Fix Scripts
+# ------------------------------------------------------------------------------
+migrate*.js
+server/migrate*.js
+fix_*.js
+server/fix_*.js
+seed_*.local.js
+
+# ------------------------------------------------------------------------------
+# 5. Database Data & Backups
+# ------------------------------------------------------------------------------
+mysql-data/
+*.sql.gz
+*.dump
+*.db
+*.sqlite
+*.sqlite3
+
+# ------------------------------------------------------------------------------
+# 6. Production React Builds & Compiled Output
+# ------------------------------------------------------------------------------
+build/
+dist/
+out/
+client/build/
+client/dist/
+
+# ------------------------------------------------------------------------------
+# 7. Logs & Debug Files
+# ------------------------------------------------------------------------------
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 *.log
+coverage/
+.nyc_output/
 
-# Editor / System Files
+# ------------------------------------------------------------------------------
+# 8. Docker Local Overrides
+# ------------------------------------------------------------------------------
+docker-compose.override.yml
+.dockerignore.local
+
+# ------------------------------------------------------------------------------
+# 9. Editor, OS & System Files
+# ------------------------------------------------------------------------------
 .DS_Store
 Thumbs.db
+desktop.ini
 .vscode/
 .idea/
 *.suo
@@ -39,3 +100,14 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# ------------------------------------------------------------------------------
+# 10. Temporary Files & Scratch
+# ------------------------------------------------------------------------------
+*_temp/
+*_temp
+*_temp.*
+temp/
+temp_*
+temp.*
+scratch/

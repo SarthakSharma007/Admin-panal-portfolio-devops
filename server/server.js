@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 
 const { promisePool, testConnection } = require('./config/db');
 
@@ -21,34 +22,50 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.ADMIN_PORT || 5001;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // ---------------------------
 // ✅ Security & Middleware
 // Configure helmet to allow cross-origin resource loading for uploaded images
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
 
-// ✅ Fix for express-rate-limit local issue
+// ✅ Fix for express-rate-limit behind Nginx
 app.set('trust proxy', 1);
 
-// ✅ Rate limiting middleware
+// ✅ Rate limiting middleware — stricter in production
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Increased for development
+  max: NODE_ENV === 'production' ? 100 : 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use(limiter);
 
-// ✅ CORS setup
+// ✅ CORS setup — reads allowed origins from environment
+const getAllowedOrigins = () => {
+  if (NODE_ENV === 'production') {
+    const envOrigins = process.env.ADMIN_CORS_ORIGINS
+      ? process.env.ADMIN_CORS_ORIGINS.split(',').map(o => o.trim())
+      : [];
+    const frontendUrl = process.env.FRONTEND_URL;
+    if (frontendUrl && !envOrigins.includes(frontendUrl)) {
+      envOrigins.push(frontendUrl);
+    }
+    return envOrigins;
+  }
+  return ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
+};
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL || 'https://yourdomain.com']
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
+  origin: getAllowedOrigins(),
   credentials: true
 }));
 
-// ✅ Body parsers
+// ✅ Body parsers & Cookie parser
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -129,13 +146,16 @@ app.use((err, req, res, next) => {
 (async () => {
   try {
     await testConnection();
-    app.listen(PORT, () => {
-      console.log(`Admin Server running on port ${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`API Base URL: http://localhost:${PORT}/api`);
-    });
   } catch (err) {
-    console.error('Failed to start server due to database connection error:', err.message);
-    process.exit(1);
+    console.warn('⚠️  Server starting WITHOUT database connection.');
+    console.warn('   DB-dependent routes will fail, but env-based login will work.');
+    console.warn('   Fix your DB credentials in server/.env to enable full functionality.');
   }
+
+  app.listen(PORT, () => {
+    console.log(`✅ Admin Server running on port ${PORT}`);
+    console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`   API Base URL: http://localhost:${PORT}/api`);
+    console.log(`   Login: ${process.env.ADMIN_EMAIL}`);
+  });
 })();

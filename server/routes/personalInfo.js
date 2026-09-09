@@ -11,8 +11,13 @@ const router = express.Router();
 // Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Save to server/uploads so it matches the express.static path in server.js
-    const uploadPath = path.join(__dirname, '..', 'uploads');
+    // Save uploads to the portfolio server's uploads folder so the portfolio
+    // frontend (port 5000) can serve them. Falls back to this server's own
+    // uploads dir if the env var is not set.
+    const portfolioUploadsPath = process.env.PORTFOLIO_UPLOADS_PATH
+      ? path.resolve(process.env.PORTFOLIO_UPLOADS_PATH)
+      : path.join(__dirname, '..', '..', '..', 'Personal-portfolio-webpage-devops', 'server', 'uploads');
+    const uploadPath = portfolioUploadsPath;
     const fs = require('fs');
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
@@ -67,7 +72,13 @@ router.put('/', auth, upload.fields([{ name: 'profile_image', maxCount: 1 }, { n
   try {
     const {
       full_name, title, email, phone, location,
-      bio, github_url, linkedin_url, resume_url
+      bio, github_url, linkedin_url, resume_url,
+      greeting_text, greeting_color, name_color, title_color,
+      github_btn_text, github_btn_bg, github_btn_color,
+      linkedin_btn_text, linkedin_btn_bg, linkedin_btn_color,
+      about_github_btn_text, about_github_btn_bg, about_github_btn_color,
+      about_linkedin_btn_text, about_linkedin_btn_bg, about_linkedin_btn_color,
+      about_resume_btn_text, about_resume_btn_bg, about_resume_btn_color
     } = req.body;
 
     // FIX: Helper to clean incoming form data
@@ -84,7 +95,26 @@ router.put('/', auth, upload.fields([{ name: 'profile_image', maxCount: 1 }, { n
       cleanValue(location),
       cleanValue(github_url),
       cleanValue(linkedin_url),
-      cleanValue(resume_url)
+      cleanValue(resume_url),
+      cleanValue(greeting_text),
+      cleanValue(greeting_color),
+      cleanValue(name_color),
+      cleanValue(title_color),
+      cleanValue(github_btn_text),
+      cleanValue(github_btn_bg),
+      cleanValue(github_btn_color),
+      cleanValue(linkedin_btn_text),
+      cleanValue(linkedin_btn_bg),
+      cleanValue(linkedin_btn_color),
+      cleanValue(about_github_btn_text),
+      cleanValue(about_github_btn_bg),
+      cleanValue(about_github_btn_color),
+      cleanValue(about_linkedin_btn_text),
+      cleanValue(about_linkedin_btn_bg),
+      cleanValue(about_linkedin_btn_color),
+      cleanValue(about_resume_btn_text),
+      cleanValue(about_resume_btn_bg),
+      cleanValue(about_resume_btn_color)
     ];
 
     // Start building the SQL query
@@ -98,7 +128,26 @@ router.put('/', auth, upload.fields([{ name: 'profile_image', maxCount: 1 }, { n
         location = ?,
         github_url = ?,
         linkedin_url = ?,
-        resume_url = ?
+        resume_url = ?,
+        greeting_text = ?,
+        greeting_color = ?,
+        name_color = ?,
+        title_color = ?,
+        github_btn_text = ?,
+        github_btn_bg = ?,
+        github_btn_color = ?,
+        linkedin_btn_text = ?,
+        linkedin_btn_bg = ?,
+        linkedin_btn_color = ?,
+        about_github_btn_text = ?,
+        about_github_btn_bg = ?,
+        about_github_btn_color = ?,
+        about_linkedin_btn_text = ?,
+        about_linkedin_btn_bg = ?,
+        about_linkedin_btn_color = ?,
+        about_resume_btn_text = ?,
+        about_resume_btn_bg = ?,
+        about_resume_btn_color = ?
     `;
 
     // Only add profile_image to the SQL query if a new file was uploaded

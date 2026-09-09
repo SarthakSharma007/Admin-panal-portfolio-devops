@@ -54,6 +54,14 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+const formatDateForDb = (dateVal) => {
+  if (!dateVal) return null;
+  const str = typeof dateVal === 'string' ? dateVal.trim() : (dateVal instanceof Date ? dateVal.toISOString() : String(dateVal));
+  if (!str) return null;
+  const dateOnly = str.split('T')[0].trim();
+  return dateOnly || null;
+};
+
 // POST /api/education - Create new education record (Admin only)
 router.post('/', auth, async (req, res) => {
   try {
@@ -68,23 +76,60 @@ router.post('/', auth, async (req, res) => {
       description 
     } = req.body;
     
-    if (!degree || !institution || !start_date) {
+    const cleanStartDate = formatDateForDb(start_date);
+    const cleanEndDate = formatDateForDb(end_date);
+    const isCurrent = current ? 1 : 0;
+
+    if (!degree || !institution || !cleanStartDate) {
       return res.status(400).json({
         success: false,
         message: 'Degree, institution, and start_date are required'
       });
     }
-    
-    const [result] = await promisePool.execute(
-      'INSERT INTO education (degree, institution, location, start_date, end_date, current, gpa, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [degree, institution, location || null, start_date, end_date || null, current || false, gpa || null, description || null]
+
+    // Deduplication check
+    const [existing] = await promisePool.execute(
+      'SELECT * FROM education WHERE degree = ? AND institution = ? AND start_date = ?',
+      [degree, institution, cleanStartDate]
     );
+
+    if (existing.length > 0) {
+      await promisePool.execute(
+        'UPDATE education SET location = ?, end_date = ?, current = ?, gpa = ?, description = ? WHERE id = ?',
+        [location || null, cleanEndDate, isCurrent, gpa || null, description || null, existing[0].id]
+      );
+      return res.status(200).json({
+        success: true,
+        message: 'Education record updated successfully',
+        data: { id: existing[0].id, ...req.body, start_date: cleanStartDate, end_date: cleanEndDate }
+      });
+    }
     
-    res.status(201).json({
-      success: true,
-      message: 'Education record created successfully',
-      data: { id: result.insertId, ...req.body }
-    });
+    try {
+      const [result] = await promisePool.execute(
+        'INSERT INTO education (degree, institution, location, start_date, end_date, current, gpa, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [degree, institution, location || null, cleanStartDate, cleanEndDate, isCurrent, gpa || null, description || null]
+      );
+      
+      return res.status(201).json({
+        success: true,
+        message: 'Education record created successfully',
+        data: { id: result.insertId, ...req.body, start_date: cleanStartDate, end_date: cleanEndDate }
+      });
+    } catch (insertErr) {
+      if (insertErr.code === 'ER_DUP_ENTRY') {
+        const [dup] = await promisePool.execute(
+          'SELECT * FROM education WHERE degree = ? AND institution = ? AND start_date = ?',
+          [degree, institution, cleanStartDate]
+        );
+        return res.status(200).json({
+          success: true,
+          message: 'Education record already exists',
+          data: dup[0] || { ...req.body, start_date: cleanStartDate, end_date: cleanEndDate }
+        });
+      }
+      throw insertErr;
+    }
   } catch (error) {
     console.error('Error creating education record:', error);
     res.status(500).json({
@@ -109,10 +154,14 @@ router.put('/:id', auth, async (req, res) => {
       gpa, 
       description 
     } = req.body;
+
+    const cleanStartDate = formatDateForDb(start_date);
+    const cleanEndDate = formatDateForDb(end_date);
+    const isCurrent = current ? 1 : 0;
     
     const [result] = await promisePool.execute(
       'UPDATE education SET degree = ?, institution = ?, location = ?, start_date = ?, end_date = ?, current = ?, gpa = ?, description = ? WHERE id = ?',
-      [degree, institution, location, start_date, end_date, current, gpa, description, id]
+      [degree, institution, location || null, cleanStartDate, cleanEndDate, isCurrent, gpa || null, description || null, id]
     );
     
     if (result.affectedRows === 0) {
@@ -124,7 +173,8 @@ router.put('/:id', auth, async (req, res) => {
     
     res.json({
       success: true,
-      message: 'Education record updated successfully'
+      message: 'Education record updated successfully',
+      data: { id: Number(id), ...req.body, start_date: cleanStartDate, end_date: cleanEndDate }
     });
   } catch (error) {
     console.error('Error updating education record:', error);

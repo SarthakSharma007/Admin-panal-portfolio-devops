@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 .admin-panel-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
+  display: block;
+  padding-left: 280px;
   min-height: 100vh;
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -10,8 +10,10 @@
 }
 
 .admin-sidebar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 280px;
   height: 100vh;
   overflow-y: auto;
   border-right: 1px solid var(--border-color);
@@ -139,9 +141,9 @@
 .admin-section {
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  padding: 1.2rem;
+  padding: 2.2rem;
   background: var(--bg-primary);
-  box-shadow: var(--shadow-light);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .admin-section-desc {
@@ -171,11 +173,11 @@
 
 .admin-list-item-column {
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 0.9rem;
-  margin-bottom: 0.8rem;
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.2rem;
   display: grid;
-  gap: 0.7rem;
+  gap: 1rem;
 }
 
 .admin-category-block {
@@ -198,14 +200,22 @@
 }
 
 .form-group {
-  display: grid;
-  gap: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-group label {
-  font-size: 0.88rem;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.form-group small {
   color: var(--text-secondary);
-  font-weight: 600;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin-top: -0.2rem;
 }
 
 .span-2 {
@@ -218,11 +228,21 @@
 .admin-row input,
 .admin-row select {
   width: 100%;
-  padding: 0.68rem 0.75rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: var(--bg-secondary);
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-primary);
   color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-section input:focus,
+.admin-section textarea:focus,
+.admin-section select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .admin-section textarea {
@@ -236,6 +256,15 @@
   gap: 0.5rem;
   color: var(--text-secondary);
   font-weight: 500;
+  justify-content: flex-start;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #6366f1;
 }
 
 .save-button,
@@ -248,15 +277,28 @@
 }
 
 .save-button {
-  margin-top: 0.9rem;
+  margin-top: 1.5rem;
   width: 100%;
-  padding: 0.85rem;
+  padding: 1rem;
+  font-size: 1.05rem;
   color: #fff;
   background: var(--accent-gradient);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.6rem;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.save-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .add-button-empty {

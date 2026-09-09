@@ -11,7 +11,7 @@ const PRESET_COLORS = [
   'rgba(99,102,241,0.4)', 'rgba(249,115,22,0.35)', 'rgba(16,185,129,0.35)', 'rgba(255,255,255,0.2)'
 ];
 
-const PopoverColorPicker = ({ color, onChange, placeholder, style }) => {
+const PopoverColorPicker = ({ color, onChange, placeholder, style, inputStyle, customSwatchStyle, customColorStyle }) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const popoverRef = useRef();
 
@@ -68,7 +68,8 @@ const PopoverColorPicker = ({ color, onChange, placeholder, style }) => {
     height: '14px',
     borderRadius: '2px',
     background: color || 'transparent',
-    border: '1px solid rgba(255,255,255,0.2)'
+    border: '1px solid rgba(255,255,255,0.2)',
+    ...customColorStyle
   };
 
   const popover = {
@@ -85,9 +86,9 @@ const PopoverColorPicker = ({ color, onChange, placeholder, style }) => {
         value={color || ''} 
         onChange={(e) => onChange(e.target.value)} 
         placeholder={placeholder}
-        style={{ width: '100%', paddingRight: '50px' }}
+        style={{ width: '100%', paddingRight: '50px', ...inputStyle }}
       />
-      <div style={swatchStyle} onClick={handleClick}>
+      <div style={customSwatchStyle || swatchStyle} onClick={handleClick}>
         <div style={colorStyle} />
       </div>
       {displayColorPicker && (

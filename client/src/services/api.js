@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Point to the Admin API running on port 5001
-  baseURL: 'http://localhost:5001/api', 
+  // Use relative URL so Nginx reverse proxy routes correctly in production.
+  // In development, the CRA proxy (package.json "proxy") forwards this to localhost:5001.
+  baseURL: '/api',
 });
 
 // Add a request interceptor to include the token

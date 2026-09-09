@@ -17,8 +17,9 @@ A full-stack admin dashboard for managing a DevOps portfolio website. The AdminP
 9. [Running the Application](#running-the-application)
 10. [API Routes](#api-routes)
 11. [Authentication & Security](#authentication--security)
-12. [Database Schema](#database-schema)
-13. [Troubleshooting](#troubleshooting)
+12. [How to Change Admin ID & Password](#how-to-change-admin-id--password)
+13. [Database Schema](#database-schema)
+14. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -525,10 +526,10 @@ The application will automatically open at: **http://localhost:3002**
 
 ```
 Email: admin@portfolio.com
-Password: Admin@123
+Password: admin123
 ```
 
-⚠️ **Change these credentials immediately in production!**
+⚠️ **Change these credentials immediately! See the [Password Change Guide](#how-to-change-admin-id--password) below.**
 
 ### Default Admin Account Setup
 
@@ -663,6 +664,76 @@ VALUES ('admin@portfolio.com', '$2a$10$...');  -- Use bcrypt hashed password
 5. **Use HTTPS in Production** - Always encrypt traffic
 6. **Backup Database Regularly** - Protect your data
 7. **Set Strong JWT_SECRET** - Use cryptographically secure random string
+
+---
+
+## 🔑 How to Change Admin ID & Password
+
+You can change your Administrator login email (ID) and password anytime. The Admin Panel supports both **salted bcrypt hashes (most secure)** and **direct environment variables**.
+
+### 🌟 Option 1: Secure Bcrypt Hash Method (Recommended)
+
+1. Open your terminal and navigate to the `server` directory:
+   ```bash
+   cd Adminpanal/server
+   ```
+
+2. Run the included password hasher script with your desired new password:
+   ```bash
+   node hash_password.js "YourNewPassword123!"
+   ```
+
+3. The script will output a 12-round salted bcrypt hash:
+   ```text
+   ================================================================
+   ✅ BCRYPT PASSWORD HASH GENERATED SUCCESSFULLY (12 rounds)
+   ================================================================
+
+   Password: YourNewPassword123!
+
+   Copy and paste this into your Adminpanal/server/.env file:
+
+   ADMIN_PASSWORD_HASH=$2a$12$WaR97YH0PqdiDTVaUtYZLe88081YM2esn57GJDva60iTqha1Ur9AK
+   ================================================================
+   ```
+
+4. Open `Adminpanal/server/.env` and update the `ADMIN_PASSWORD_HASH` line:
+   ```env
+   ADMIN_PASSWORD_HASH=$2a$12$WaR97YH0PqdiDTVaUtYZLe88081YM2esn57GJDva60iTqha1Ur9AK
+   ```
+
+5. Restart the Admin server:
+   - In your running server terminal, press `Ctrl + C`
+   - Start it again:
+     ```bash
+     npm run dev
+     ```
+
+---
+
+### ⚡ Option 2: Direct Plaintext Method (Fastest)
+
+If you don't wish to run the terminal script:
+
+1. Open `Adminpanal/server/.env`.
+2. Set your new password directly using `ADMIN_PASSWORD` (and comment out or remove `ADMIN_PASSWORD_HASH`):
+   ```env
+   ADMIN_PASSWORD=YourNewPassword123!
+   ```
+3. Save the file and restart the server (`Ctrl + C`, then `npm run dev`).
+
+> **Security Note:** Even with plaintext `.env` configuration, the backend verifies passwords using constant-time SHA-256 comparisons (`crypto.timingSafeEqual`) to eliminate timing-attack vulnerabilities.
+
+---
+
+### 📧 How to Change Admin Login Email (ID)
+
+1. Open `Adminpanal/server/.env`.
+2. Update the `ADMIN_EMAIL` line:
+   ```env
+   ADMIN_EMAIL=yourname@example.com
+   ```
+3. Restart the Admin server (`Ctrl + C`, then `npm run dev`).
 
 ---
 
