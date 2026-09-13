@@ -1,6 +1,7 @@
 # ==============================================================================
 # Gitignore — AdminPanel (DevOps Portfolio Management)
 # Production-Hardened Security & Build Hygiene
+# Aligned with githubhost.txt (Step 1.4: node_modules/, .env, build/, uploads/, *.log)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -36,11 +37,14 @@ web_modules/
 # ------------------------------------------------------------------------------
 # 3. Dynamic Uploads & Static User Files
 # ------------------------------------------------------------------------------
+uploads/*
+!uploads/.gitkeep
+**/uploads/*
+!**/uploads/.gitkeep
 server/uploads/*
 !server/uploads/.gitkeep
 client/public/uploads/*
 !client/public/uploads/.gitkeep
-uploads/
 
 # ------------------------------------------------------------------------------
 # 4. Local One-Off Migration, Seeding & Database Fix Scripts
