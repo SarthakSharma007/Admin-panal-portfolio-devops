@@ -53,8 +53,15 @@ router.post('/upload', auth, upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No image uploaded' });
   }
-  // The frontend fetches from /uploads/filename
-  const imageUrl = `/uploads/${req.file.filename}`;
+  // In production, store the full absolute URL so the portfolio frontend
+  // (running on a separate service) can fetch the image from this admin backend.
+  // Set ADMIN_PUBLIC_URL=https://admin-backend-zf1c.onrender.com on your Render service.
+  const adminPublicUrl = process.env.ADMIN_PUBLIC_URL
+    ? process.env.ADMIN_PUBLIC_URL.replace(/\/+$/, '')
+    : null;
+  const imageUrl = adminPublicUrl
+    ? `${adminPublicUrl}/uploads/${req.file.filename}`
+    : `/uploads/${req.file.filename}`;
   res.json({ success: true, url: imageUrl });
 });
 

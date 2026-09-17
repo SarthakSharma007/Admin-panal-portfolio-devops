@@ -46,14 +46,23 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // ✅ CORS setup — reads allowed origins from environment
+// ADMIN_CORS_ORIGINS: comma-separated list of allowed origins (Admin Panel frontend, Portfolio frontend, etc.)
+// FRONTEND_URL: Admin Panel frontend URL (legacy fallback)
+// PORTFOLIO_URL: Portfolio frontend URL — required so the portfolio can load images uploaded via Admin backend
 const getAllowedOrigins = () => {
   if (NODE_ENV === 'production') {
     const envOrigins = process.env.ADMIN_CORS_ORIGINS
       ? process.env.ADMIN_CORS_ORIGINS.split(',').map(o => o.trim())
       : [];
+    // Add Admin frontend URL if not already in list
     const frontendUrl = process.env.FRONTEND_URL;
     if (frontendUrl && !envOrigins.includes(frontendUrl)) {
       envOrigins.push(frontendUrl);
+    }
+    // Add Portfolio frontend URL — needed for cross-origin image fetching from Admin backend
+    const portfolioUrl = process.env.PORTFOLIO_URL;
+    if (portfolioUrl && !envOrigins.includes(portfolioUrl)) {
+      envOrigins.push(portfolioUrl);
     }
     return envOrigins;
   }

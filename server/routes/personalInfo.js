@@ -89,10 +89,27 @@ router.put('/', auth, upload.fields([
     // Converts "null", "undefined", or actual undefined to JS null for the database
     const cleanValue = (val) => (val === 'null' || val === 'undefined' || val === undefined) ? null : val;
 
+    // Helper: build a storable URL for uploaded files.
+    // In production, ADMIN_PUBLIC_URL must be set to the full public hostname
+    // of this admin backend (e.g. https://admin-backend-zf1c.onrender.com).
+    // Storing the full URL means the portfolio frontend can fetch the image
+    // directly from this server — solving the cross-service filesystem isolation
+    // problem when both services run on separate Render/cloud instances.
+    const getUploadUrl = (filename) => {
+      const adminPublicUrl = process.env.ADMIN_PUBLIC_URL
+        ? process.env.ADMIN_PUBLIC_URL.replace(/\/+$/, '')
+        : null;
+      if (adminPublicUrl) {
+        return `${adminPublicUrl}/uploads/${filename}`;
+      }
+      // Local development: return relative path (served by this same Express server)
+      return `/uploads/${filename}`;
+    };
+
     // If a resume PDF was uploaded, use its generated file path; otherwise use provided resume_url
     let effectiveResumeUrl = cleanValue(resume_url);
     if (req.files && req.files['resume_file']) {
-      effectiveResumeUrl = '/uploads/' + req.files['resume_file'][0].filename;
+      effectiveResumeUrl = getUploadUrl(req.files['resume_file'][0].filename);
     }
 
     // Build array of values for the SQL query
@@ -162,14 +179,14 @@ router.put('/', auth, upload.fields([
 
     // Only add profile_image to the SQL query if a new file was uploaded
     if (req.files && req.files['profile_image']) {
-      const profileImagePath = '/uploads/' + req.files['profile_image'][0].filename;
+      const profileImagePath = getUploadUrl(req.files['profile_image'][0].filename);
       sql += `, profile_image = ?`;
       updateFields.push(profileImagePath);
     }
 
     // Only add about_image to the SQL query if a new file was uploaded
     if (req.files && req.files['about_image']) {
-      const aboutImagePath = '/uploads/' + req.files['about_image'][0].filename;
+      const aboutImagePath = getUploadUrl(req.files['about_image'][0].filename);
       sql += `, about_image = ?`;
       updateFields.push(aboutImagePath);
     }
