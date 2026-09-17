@@ -32,16 +32,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    limits: { fileSize: 15 * 1024 * 1024 }, // 15MB limit
     fileFilter: (req, file, cb) => {
-        // Allow only images
-        const filetypes = /jpeg|jpg|png|gif|webp/;
-        const mimetype = filetypes.test(file.mimetype);
+        // Allow images and PDF documents
+        const filetypes = /jpeg|jpg|png|gif|webp|pdf/;
+        const mimetype = /jpeg|jpg|png|gif|webp|pdf/.test(file.mimetype) || file.mimetype === 'application/pdf';
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         if (mimetype && extname) {
             return cb(null, true);
         }
-        cb(new Error("Error: File upload only supports the following filetypes - " + filetypes));
+        cb(new Error("Error: File upload only supports images (JPEG, PNG, GIF, WebP) and PDF documents."));
     }
 });
 // --- End Multer Setup ---
@@ -66,9 +66,13 @@ router.get('/', async (req, res) => {
 });
 
 // PUT /api/personal-info - Update personal information
-// Use multer to handle multipart/form-data, expecting 'profile_image' and/or 'about_image'
+// Use multer to handle multipart/form-data, expecting 'profile_image', 'about_image', and/or 'resume_file'
 // FIX: Using async/await and promisePool.execute
-router.put('/', auth, upload.fields([{ name: 'profile_image', maxCount: 1 }, { name: 'about_image', maxCount: 1 }]), async (req, res) => {
+router.put('/', auth, upload.fields([
+  { name: 'profile_image', maxCount: 1 },
+  { name: 'about_image', maxCount: 1 },
+  { name: 'resume_file', maxCount: 1 }
+]), async (req, res) => {
   try {
     const {
       full_name, title, email, phone, location,
@@ -85,6 +89,12 @@ router.put('/', auth, upload.fields([{ name: 'profile_image', maxCount: 1 }, { n
     // Converts "null", "undefined", or actual undefined to JS null for the database
     const cleanValue = (val) => (val === 'null' || val === 'undefined' || val === undefined) ? null : val;
 
+    // If a resume PDF was uploaded, use its generated file path; otherwise use provided resume_url
+    let effectiveResumeUrl = cleanValue(resume_url);
+    if (req.files && req.files['resume_file']) {
+      effectiveResumeUrl = '/uploads/' + req.files['resume_file'][0].filename;
+    }
+
     // Build array of values for the SQL query
     const updateFields = [
       cleanValue(full_name),
@@ -95,7 +105,7 @@ router.put('/', auth, upload.fields([{ name: 'profile_image', maxCount: 1 }, { n
       cleanValue(location),
       cleanValue(github_url),
       cleanValue(linkedin_url),
-      cleanValue(resume_url),
+      effectiveResumeUrl,
       cleanValue(greeting_text),
       cleanValue(greeting_color),
       cleanValue(name_color),

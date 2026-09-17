@@ -5,6 +5,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 const { promisePool, testConnection } = require('./config/db');
 
@@ -70,6 +71,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ✅ Static files (uploads)
+const portfolioUploadsPath = process.env.PORTFOLIO_UPLOADS_PATH
+  ? path.resolve(process.env.PORTFOLIO_UPLOADS_PATH)
+  : path.join(__dirname, '..', '..', 'Personal-portfolio-webpage-devops', 'server', 'uploads');
+app.use('/uploads', express.static(portfolioUploadsPath));
 app.use('/uploads', express.static('uploads'));
 
 // ---------------------------

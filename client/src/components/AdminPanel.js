@@ -25,7 +25,8 @@ import {
   FaTrash,
   FaUserCircle,
   FaPen,
-  FaAlignLeft
+  FaAlignLeft,
+  FaFilePdf
 } from 'react-icons/fa';
 import api from '../services/api';
 import { ThemeContext } from '../contexts/ThemeContext';
@@ -144,9 +145,12 @@ const AdminPanel = () => {
   const [personalInfo, setPersonalInfo] = useState({
     full_name: '',
     title: '',
+    bio: '',
+    resume_url: '',
     github_url: '',
     linkedin_url: '',
     profile_image: '',
+    about_image: '',
     greeting_text: '',
     greeting_color: '',
     name_color: '',
@@ -181,7 +185,7 @@ const AdminPanel = () => {
   const [experiences, setExperiences] = useState([]);
   const [education, setEducation] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [files, setFiles] = useState({ profile_image: null, about_image: null });
+  const [files, setFiles] = useState({ profile_image: null, about_image: null, resume_file: null });
 
   const unreadCount = useMemo(() => messages.filter((m) => !m.read_status).length, [messages]);
 
@@ -322,6 +326,9 @@ const AdminPanel = () => {
       if (files.about_image) {
         formData.append('about_image', files.about_image);
       }
+      if (files.resume_file) {
+        formData.append('resume_file', files.resume_file);
+      }
       const res = await api.put('/personal-info', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -332,10 +339,10 @@ const AdminPanel = () => {
           ...d, // Merge all returned fields back into state
         }));
         // Clear the pending file + local preview after successful upload
-        setFiles(prev => ({ ...prev, profile_image: null, about_image: null }));
+        setFiles(prev => ({ ...prev, profile_image: null, about_image: null, resume_file: null }));
         setImagePreview(null);
         setAboutImagePreview(null);
-        showStatus('personal', 'success', 'Home page info saved successfully.');
+        showStatus('personal', 'success', 'Personal & About info saved successfully.');
         maybeRedirect();
       } else {
         showStatus('personal', 'error', res.data?.message || 'Unable to save.');
@@ -852,6 +859,233 @@ const AdminPanel = () => {
                   placeholder="Tell visitors about yourself..."
                   value={personalInfo.bio || ''}
                   onChange={(e) => handleObjectField(setPersonalInfo, 'bio', e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* ── Resume / CV PDF Upload & URL ───────────── */}
+            <div className="resume-card-wrapper" style={{
+              marginTop: '1.8rem',
+              padding: '1.5rem',
+              borderRadius: '12px',
+              border: '1px solid var(--border-color)',
+              background: 'var(--bg-secondary)',
+              boxShadow: 'var(--shadow-light)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
+                <FaFilePdf style={{ color: '#ef4444', fontSize: '1.3rem' }} />
+                <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-primary)' }}>
+                  Resume / CV (PDF & Link)
+                </h3>
+              </div>
+              <p style={{ margin: '0 0 1.2rem', fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                Upload your resume PDF directly from your device, or provide an external link (such as Google Drive). The <strong>Resume</strong> button in your portfolio's About section will link directly to this file.
+              </p>
+
+              {/* Upload control row */}
+              <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: '0.8rem',
+                padding: '1rem',
+                borderRadius: '8px',
+                background: 'var(--bg-primary)',
+                border: '1px dashed var(--border-color)',
+                marginBottom: '1rem'
+              }}>
+                <label
+                  htmlFor="resume-pdf-input"
+                  className="resume-upload-btn"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.65rem 1.2rem',
+                    borderRadius: '8px',
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: '1.5px solid #ef4444',
+                    color: '#ef4444',
+                    fontWeight: 600,
+                    fontSize: '0.88rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  <FaFilePdf /> {files.resume_file ? 'Change PDF File' : (personalInfo.resume_url ? 'Upload New Resume PDF' : 'Upload Resume PDF')}
+                </label>
+                <input
+                  id="resume-pdf-input"
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  style={{ display: 'none' }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                        alert('Please select a valid PDF file.');
+                        return;
+                      }
+                      setFiles(prev => ({ ...prev, resume_file: file }));
+                    }
+                  }}
+                />
+
+                {files.resume_file && (
+                  <button
+                    type="button"
+                    onClick={() => setFiles(prev => ({ ...prev, resume_file: null }))}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.6rem 0.9rem',
+                      borderRadius: '8px',
+                      background: 'transparent',
+                      border: '1px solid var(--border-color)',
+                      color: 'var(--text-secondary)',
+                      fontSize: '0.85rem',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <FaTimesCircle /> Discard Selection
+                  </button>
+                )}
+
+                {files.resume_file && (
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.45rem 0.8rem',
+                    borderRadius: '6px',
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    border: '1px solid #10b981',
+                    color: '#10b981',
+                    fontSize: '0.83rem',
+                    fontWeight: 500
+                  }}>
+                    📎 Selected: <strong>{files.resume_file.name}</strong> ({(files.resume_file.size / 1024).toFixed(1)} KB) — click <em>Save About Info</em> below to upload
+                  </div>
+                )}
+              </div>
+
+              {/* Current Resume Preview / Link Card */}
+              {personalInfo.resume_url && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '1rem',
+                  padding: '0.85rem 1.2rem',
+                  borderRadius: '8px',
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--border-color)',
+                  marginBottom: '1rem'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', minWidth: '220px', flex: 1 }}>
+                    <div style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '8px',
+                      background: 'rgba(239, 68, 68, 0.12)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#ef4444',
+                      fontSize: '1.2rem',
+                      flexShrink: 0
+                    }}>
+                      <FaFilePdf />
+                    </div>
+                    <div style={{ overflow: 'hidden' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                        Active Resume
+                      </div>
+                      <div style={{
+                        fontSize: '0.78rem',
+                        color: 'var(--text-secondary)',
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        maxWidth: '450px'
+                      }}>
+                        {personalInfo.resume_url}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+                    <a
+                      href={personalInfo.resume_url.startsWith('http')
+                        ? personalInfo.resume_url
+                        : `http://localhost:5000${personalInfo.resume_url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        padding: '0.5rem 0.9rem',
+                        borderRadius: '6px',
+                        background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)',
+                        color: '#ffffff',
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        textDecoration: 'none',
+                        boxShadow: '0 2px 6px rgba(59, 130, 246, 0.3)'
+                      }}
+                    >
+                      <FaExternalLinkAlt style={{ fontSize: '0.75rem' }} /> View / Download
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (window.confirm('Are you sure you want to remove the current resume link/file? Click "Save About Info" to finalize.')) {
+                          setPersonalInfo(prev => ({ ...prev, resume_url: '' }));
+                          setFiles(prev => ({ ...prev, resume_file: null }));
+                        }
+                      }}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        padding: '0.5rem 0.8rem',
+                        borderRadius: '6px',
+                        background: 'transparent',
+                        border: '1px solid #ef4444',
+                        color: '#ef4444',
+                        fontSize: '0.85rem',
+                        fontWeight: 500,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <FaTrash style={{ fontSize: '0.75rem' }} /> Remove
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Direct URL input */}
+              <div className="form-group" style={{ margin: 0 }}>
+                <label style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.35rem', display: 'block' }}>
+                  Resume URL / File Path
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. /uploads/resume.pdf or https://drive.google.com/file/d/..."
+                  value={personalInfo.resume_url || ''}
+                  onChange={(e) => handleObjectField(setPersonalInfo, 'resume_url', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-color)',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.92rem'
+                  }}
                 />
               </div>
             </div>
