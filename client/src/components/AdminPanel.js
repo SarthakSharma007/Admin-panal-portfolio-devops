@@ -115,6 +115,20 @@ const newItem = {
   education: { degree: '', institution: '', location: '', start_date: '', end_date: '', current: false, gpa: '', description: '' }
 };
 
+const getAdminAssetUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  // In production, REACT_APP_API_URL is set to the deployed backend URL (e.g. Render).
+  // The Vercel vercel.json rewrite handles /uploads/:path* → backend, so relative works too.
+  if (process.env.REACT_APP_API_URL) {
+    const base = process.env.REACT_APP_API_URL.replace(/\/+$/, '');
+    return `${base}${cleanPath}`;
+  }
+  // Local development: Admin Panel backend runs on port 5001
+  return `http://localhost:5001${cleanPath}`;
+};
+
 const AdminPanel = () => {
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
@@ -654,8 +668,13 @@ const AdminPanel = () => {
                 <div style={{ width: '100px', height: '100px', borderRadius: '50%', overflow: 'hidden', border: '3px solid var(--bg-primary)', boxShadow: 'var(--shadow-medium)', flexShrink: 0, background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {(imagePreview || personalInfo.profile_image) ? (
                     <img
-                      src={imagePreview || (personalInfo.profile_image?.startsWith('http') ? personalInfo.profile_image : `http://localhost:5000${personalInfo.profile_image}`)}
+                      src={imagePreview || getAdminAssetUrl(personalInfo.profile_image)}
                       alt="Profile preview"
+                      onError={(e) => {
+                        if (e.target.src && e.target.src.includes(':5001')) {
+                          e.target.src = e.target.src.replace(':5001', ':5000');
+                        }
+                      }}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   ) : (
@@ -801,11 +820,13 @@ const AdminPanel = () => {
                 {(aboutImagePreview || personalInfo.about_image) ? (
                   <img
                     className="home-image-preview"
-                    src={aboutImagePreview ||
-                      (personalInfo.about_image?.startsWith('http')
-                        ? personalInfo.about_image
-                        : `http://localhost:5000${personalInfo.about_image}`)}
+                    src={aboutImagePreview || getAdminAssetUrl(personalInfo.about_image)}
                     alt="About preview"
+                    onError={(e) => {
+                      if (e.target.src && e.target.src.includes(':5001')) {
+                        e.target.src = e.target.src.replace(':5001', ':5000');
+                      }
+                    }}
                   />
                 ) : (
                   <div className="home-image-placeholder">
@@ -1083,9 +1104,7 @@ const AdminPanel = () => {
 
                   <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
                     <a
-                      href={personalInfo.resume_url.startsWith('http')
-                        ? personalInfo.resume_url
-                        : `http://localhost:5000${personalInfo.resume_url}`}
+                      href={getAdminAssetUrl(personalInfo.resume_url)}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{

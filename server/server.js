@@ -71,11 +71,21 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ✅ Static files (uploads)
+// Primary: use env var (for production/Docker) or the shared portfolio uploads dir (for local dev).
+// Fallback: this server's own uploads dir using __dirname for reliability.
 const portfolioUploadsPath = process.env.PORTFOLIO_UPLOADS_PATH
   ? path.resolve(process.env.PORTFOLIO_UPLOADS_PATH)
   : path.join(__dirname, '..', '..', 'Personal-portfolio-webpage-devops', 'server', 'uploads');
+const localUploadsPath = path.join(__dirname, 'uploads');
+
+[portfolioUploadsPath, localUploadsPath].forEach((p) => {
+  if (!require('fs').existsSync(p)) {
+    require('fs').mkdirSync(p, { recursive: true });
+  }
+});
+
 app.use('/uploads', express.static(portfolioUploadsPath));
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(localUploadsPath));
 
 // ---------------------------
 // ✅ API Routes
