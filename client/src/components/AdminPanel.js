@@ -79,9 +79,9 @@ const TagsInput = ({ value, onChange, placeholder }) => {
           <FaTimesCircle style={{ cursor: 'pointer', color: '#9ca3af', fontSize: '0.8rem' }} onClick={() => removeTag(i)} />
         </span>
       ))}
-      <input 
-        value={inputValue} 
-        onChange={(e) => setInputValue(e.target.value)} 
+      <input
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={() => {
           if (inputValue.trim()) {
@@ -199,10 +199,10 @@ const AdminPanel = () => {
   const handleImageUpload = async (e, callback) => {
     const file = e.target.files[0];
     if (!file) return;
-    
+
     const formData = new FormData();
     formData.append('image', file);
-    
+
     try {
       const res = await api.post('/projects/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -399,7 +399,7 @@ const AdminPanel = () => {
           if (key === 'certifications') freshList = freshList.map(mapCert);
           setter(freshList);
         }
-      } catch (e) {}
+      } catch (e) { }
 
       showStatus(key, 'success', `${key} saved successfully.`);
       maybeRedirect();
@@ -411,7 +411,7 @@ const AdminPanel = () => {
           if (key === 'certifications') freshList = freshList.map(mapCert);
           setter(freshList);
         }
-      } catch (e) {}
+      } catch (e) { }
       showStatus(key, 'error', `Failed to save ${key}.`);
     } finally {
       isSavingRef.current.delete(key);
@@ -591,22 +591,22 @@ const AdminPanel = () => {
             <button className="plain-icon-btn" onClick={() => setShowHeaderMenu(!showHeaderMenu)} title="More actions">
               <FaEllipsisV />
             </button>
-            
+
             {showHeaderMenu && (
-              <div 
+              <div
                 className="header-dropdown-menu"
                 style={{
-                  position: 'absolute', 
-                  top: '120%', 
-                  right: '0', 
-                  background: 'var(--bg-primary)', 
-                  border: '1px solid var(--border-color)', 
-                  borderRadius: '12px', 
-                  padding: '1rem', 
+                  position: 'absolute',
+                  top: '120%',
+                  right: '0',
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '12px',
+                  padding: '1rem',
                   boxShadow: 'var(--shadow-medium)',
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  gap: '1rem', 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
                   zIndex: 100,
                   minWidth: '220px',
                   alignItems: 'flex-start'
@@ -643,12 +643,12 @@ const AdminPanel = () => {
                 These fields appear on the <strong style={{ color: 'var(--text-primary)' }}>Home</strong> page hero. Edit them here to update what visitors see first.
               </p>
             </div>
-            
+
             {status.personal && <p className={`status-message ${status.personal.type}`}>{status.personal.text}</p>}
 
             <div style={{ background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '2rem', boxShadow: 'var(--shadow-light)' }}>
               <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.2rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>Profile Information</h3>
-              
+
               {/* Profile Image Upload */}
               <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', marginBottom: '2rem', padding: '1.5rem', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px dashed var(--border-color)' }}>
                 <div style={{ width: '100px', height: '100px', borderRadius: '50%', overflow: 'hidden', border: '3px solid var(--bg-primary)', boxShadow: 'var(--shadow-medium)', flexShrink: 0, background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -714,7 +714,7 @@ const AdminPanel = () => {
                   <FaMagic /> AI Smart Palette
                 </button>
               </div>
-              
+
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Greeting Text</label>
@@ -863,9 +863,74 @@ const AdminPanel = () => {
               </div>
             </div>
 
-            {/* ── Resume / CV PDF Upload & URL ───────────── */}
+            {/* About Customizations */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '2.5rem 0 1.5rem 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>About Customizations</h3>
+              <button type="button" onClick={() => generateIndividualPalette('about_all')} style={{ background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(236, 72, 153, 0.25)' }}>
+                <FaMagic /> AI Smart Palette
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2rem', marginBottom: '1rem' }}>
+              <h4 style={{ fontSize: '1rem', color: 'var(--text-primary)', margin: 0 }}>GitHub Button</h4>
+              <button type="button" onClick={() => generateIndividualPalette('about_github')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a855f7', padding: '0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }} title="AI Randomize"><FaMagic /> Auto Color</button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Button Text</label>
+                <input type="text" placeholder="e.g. GitHub" value={personalInfo.about_github_btn_text || ''} onChange={(e) => handleObjectField(setPersonalInfo, 'about_github_btn_text', e.target.value)} style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: '0.95rem' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                <PopoverColorPicker color={personalInfo.about_github_btn_bg || '#000000'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_github_btn_bg', color)} />
+                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Background</label>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                <PopoverColorPicker color={personalInfo.about_github_btn_color || '#ffffff'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_github_btn_color', color)} />
+                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Text Color</label>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2rem', marginBottom: '1rem' }}>
+              <h4 style={{ fontSize: '1rem', color: 'var(--text-primary)', margin: 0 }}>LinkedIn Button</h4>
+              <button type="button" onClick={() => generateIndividualPalette('about_linkedin')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a855f7', padding: '0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }} title="AI Randomize"><FaMagic /> Auto Color</button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Button Text</label>
+                <input type="text" placeholder="e.g. LinkedIn" value={personalInfo.about_linkedin_btn_text || ''} onChange={(e) => handleObjectField(setPersonalInfo, 'about_linkedin_btn_text', e.target.value)} style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: '0.95rem' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                <PopoverColorPicker color={personalInfo.about_linkedin_btn_bg || '#0077b5'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_linkedin_btn_bg', color)} />
+                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Background</label>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                <PopoverColorPicker color={personalInfo.about_linkedin_btn_color || '#ffffff'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_linkedin_btn_color', color)} />
+                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Text Color</label>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2rem', marginBottom: '1rem' }}>
+              <h4 style={{ fontSize: '1rem', color: 'var(--text-primary)', margin: 0 }}>Resume Button</h4>
+              <button type="button" onClick={() => generateIndividualPalette('about_resume')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a855f7', padding: '0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }} title="AI Randomize"><FaMagic /> Auto Color</button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', marginBottom: '1.2rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Button Text</label>
+                <input type="text" placeholder="e.g. Resume" value={personalInfo.about_resume_btn_text || ''} onChange={(e) => handleObjectField(setPersonalInfo, 'about_resume_btn_text', e.target.value)} style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: '0.95rem' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                <PopoverColorPicker color={personalInfo.about_resume_btn_bg || '#ef4444'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_resume_btn_bg', color)} />
+                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Background</label>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                <PopoverColorPicker color={personalInfo.about_resume_btn_color || '#ffffff'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_resume_btn_color', color)} />
+                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Text Color</label>
+              </div>
+            </div>
+
+            {/* ── Resume / CV PDF Upload & URL Block ───────────── */}
             <div className="resume-card-wrapper" style={{
-              marginTop: '1.8rem',
+              marginBottom: '2rem',
               padding: '1.5rem',
               borderRadius: '12px',
               border: '1px solid var(--border-color)',
@@ -874,12 +939,12 @@ const AdminPanel = () => {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
                 <FaFilePdf style={{ color: '#ef4444', fontSize: '1.3rem' }} />
-                <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-primary)' }}>
-                  Resume / CV (PDF & Link)
-                </h3>
+                <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-primary)' }}>
+                  Resume PDF File & Link
+                </h4>
               </div>
               <p style={{ margin: '0 0 1.2rem', fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                Upload your resume PDF directly from your device, or provide an external link (such as Google Drive). The <strong>Resume</strong> button in your portfolio's About section will link directly to this file.
+                Upload your resume PDF directly to your portfolio, or provide an external link (such as Google Drive). Visitors clicking the <strong>Resume</strong> button on your portfolio will open or download this file.
               </p>
 
               {/* Upload control row */}
@@ -1090,71 +1155,6 @@ const AdminPanel = () => {
               </div>
             </div>
 
-            {/* About Customizations */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '2.5rem 0 1.5rem 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
-              <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>About Customizations</h3>
-              <button type="button" onClick={() => generateIndividualPalette('about_all')} style={{ background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(236, 72, 153, 0.25)' }}>
-                <FaMagic /> AI Smart Palette
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2rem', marginBottom: '1rem' }}>
-              <h4 style={{ fontSize: '1rem', color: 'var(--text-primary)', margin: 0 }}>GitHub Button</h4>
-              <button type="button" onClick={() => generateIndividualPalette('about_github')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a855f7', padding: '0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }} title="AI Randomize"><FaMagic /> Auto Color</button>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Button Text</label>
-                <input type="text" placeholder="e.g. GitHub" value={personalInfo.about_github_btn_text || ''} onChange={(e) => handleObjectField(setPersonalInfo, 'about_github_btn_text', e.target.value)} style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: '0.95rem' }} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
-                <PopoverColorPicker color={personalInfo.about_github_btn_bg || '#000000'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_github_btn_bg', color)} />
-                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Background</label>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
-                <PopoverColorPicker color={personalInfo.about_github_btn_color || '#ffffff'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_github_btn_color', color)} />
-                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Text Color</label>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2rem', marginBottom: '1rem' }}>
-              <h4 style={{ fontSize: '1rem', color: 'var(--text-primary)', margin: 0 }}>LinkedIn Button</h4>
-              <button type="button" onClick={() => generateIndividualPalette('about_linkedin')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a855f7', padding: '0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }} title="AI Randomize"><FaMagic /> Auto Color</button>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Button Text</label>
-                <input type="text" placeholder="e.g. LinkedIn" value={personalInfo.about_linkedin_btn_text || ''} onChange={(e) => handleObjectField(setPersonalInfo, 'about_linkedin_btn_text', e.target.value)} style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: '0.95rem' }} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
-                <PopoverColorPicker color={personalInfo.about_linkedin_btn_bg || '#0077b5'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_linkedin_btn_bg', color)} />
-                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Background</label>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
-                <PopoverColorPicker color={personalInfo.about_linkedin_btn_color || '#ffffff'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_linkedin_btn_color', color)} />
-                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Text Color</label>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2rem', marginBottom: '1rem' }}>
-              <h4 style={{ fontSize: '1rem', color: 'var(--text-primary)', margin: 0 }}>Resume Button</h4>
-              <button type="button" onClick={() => generateIndividualPalette('about_resume')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a855f7', padding: '0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }} title="AI Randomize"><FaMagic /> Auto Color</button>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Button Text</label>
-                <input type="text" placeholder="e.g. Resume" value={personalInfo.about_resume_btn_text || ''} onChange={(e) => handleObjectField(setPersonalInfo, 'about_resume_btn_text', e.target.value)} style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: '0.95rem' }} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
-                <PopoverColorPicker color={personalInfo.about_resume_btn_bg || '#ef4444'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_resume_btn_bg', color)} />
-                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Background</label>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.5rem' }}>
-                <PopoverColorPicker color={personalInfo.about_resume_btn_color || '#ffffff'} onChange={(color) => handleObjectField(setPersonalInfo, 'about_resume_btn_color', color)} />
-                <label style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Text Color</label>
-              </div>
-            </div>
-
             <button className="save-button" onClick={savePersonalInfo} disabled={loading.personal}>
               <FaSave /> {loading.personal ? 'Saving...' : 'Save About Info'}
             </button>
@@ -1169,7 +1169,7 @@ const AdminPanel = () => {
                 <FaPen style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }} />
               </div>
               {status.skillsHeader && <p className={`status-message ${status.skillsHeader.type}`}>{status.skillsHeader.text}</p>}
-              
+
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
                 <div className="form-group">
                   <label style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 500 }}>Subtitle (e.g. MY TOOLKIT)</label>
@@ -1197,14 +1197,14 @@ const AdminPanel = () => {
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 600, marginBottom: '0.5rem' }}>
                     <FaPalette style={{ color: 'var(--text-secondary)' }} /> Highlight Style (or solid color)
                   </label>
-                  
+
                   <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                      <div style={{ 
-                        height: '100px', 
-                        background: skillsHeader.title_gradient || 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%)', 
-                        borderRadius: '8px', 
-                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' 
+                      <div style={{
+                        height: '100px',
+                        background: skillsHeader.title_gradient || 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%)',
+                        borderRadius: '8px',
+                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
                       }}></div>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         {[
@@ -1214,11 +1214,11 @@ const AdminPanel = () => {
                           'linear-gradient(135deg, #10B981 0%, #059669 100%)',
                           'linear-gradient(135deg, #6B7280 0%, #374151 100%)'
                         ].map((grad, i) => (
-                          <div 
+                          <div
                             key={i}
                             onClick={() => setSkillsHeader({ ...skillsHeader, title_gradient: grad })}
-                            style={{ 
-                              width: '32px', height: '24px', borderRadius: '6px', background: grad, 
+                            style={{
+                              width: '32px', height: '24px', borderRadius: '6px', background: grad,
                               cursor: 'pointer', border: skillsHeader.title_gradient === grad ? '2px solid #2563EB' : '1px solid var(--border-color)',
                               boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
                             }}
@@ -1226,37 +1226,37 @@ const AdminPanel = () => {
                         ))}
                       </div>
                     </div>
-                    
+
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '130px' }}>
-                      <button 
+                      <button
                         onClick={() => setShowSkillsGradientInput(!showSkillsGradientInput)}
-                        style={{ 
-                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'var(--bg-primary)', 
-                          border: '1px solid var(--border-color)', padding: '0.5rem 0.8rem', borderRadius: '6px', 
-                          fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, color: 'var(--text-primary)' 
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'var(--bg-primary)',
+                          border: '1px solid var(--border-color)', padding: '0.5rem 0.8rem', borderRadius: '6px',
+                          fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, color: 'var(--text-primary)'
                         }}>
                         <FaPalette style={{ color: '#ec4899', fontSize: '1rem' }} /> Edit
                       </button>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>Customize or select a preset.</span>
                     </div>
                   </div>
-                  
+
                   {showSkillsGradientInput && (
-                    <input 
+                    <input
                       style={{ marginTop: '1rem', padding: '0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', width: '100%' }}
-                      value={skillsHeader.title_gradient || ''} 
-                      onChange={(e) => setSkillsHeader({ ...skillsHeader, title_gradient: e.target.value })} 
-                      placeholder="e.g. linear-gradient(to right, #ff0000, #00ff00)" 
+                      value={skillsHeader.title_gradient || ''}
+                      onChange={(e) => setSkillsHeader({ ...skillsHeader, title_gradient: e.target.value })}
+                      placeholder="e.g. linear-gradient(to right, #ff0000, #00ff00)"
                     />
                   )}
                 </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
-                <button 
-                  className="save-button" 
-                  onClick={saveSkillsHeader} 
-                  disabled={loading.skillsHeader} 
+                <button
+                  className="save-button"
+                  onClick={saveSkillsHeader}
+                  disabled={loading.skillsHeader}
                   style={{ background: '#3B82F6', color: '#fff', border: 'none', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '6px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', width: 'auto', minWidth: '120px', justifyContent: 'center' }}
                 >
                   <FaSave style={{ fontSize: '0.9rem' }} /> {loading.skillsHeader ? 'Saving...' : 'Save Header'}
@@ -1286,7 +1286,7 @@ const AdminPanel = () => {
                   </div>
                   <button className="remove-button" onClick={() => removeListItem('skillCategories', skillCategories, setSkillCategories, catIndex, '/skillCategories')} style={{ marginTop: '24px' }}><FaTrash /></button>
                 </div>
-                
+
                 <div className="admin-row" style={{ marginBottom: '0.5rem' }}>
                   <div className="form-group" style={{ flex: 1 }}>
                     <label>Gradient Background</label>
@@ -1303,8 +1303,8 @@ const AdminPanel = () => {
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
                   {BLOCK_PALETTES.map((p, idx) => (
-                    <button 
-                      key={idx} 
+                    <button
+                      key={idx}
                       title={p.name}
                       onClick={() => {
                         handleListField(setSkillCategories, catIndex, 'gradient', p.gradient);
@@ -1340,7 +1340,7 @@ const AdminPanel = () => {
                 <button className="add-button-empty" onClick={() => addSkillInCategory(cat.category_id)} style={{ marginTop: '0.5rem' }}><FaPlus /> Add Skill to Block</button>
               </div>
             ))}
-            
+
             <button className="add-button-empty" onClick={addCategory}><FaPlus /> Add New Block</button>
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
               <button className="save-button" onClick={saveCollection('skillCategories', skillCategories, setSkillCategories, '/skillCategories')} disabled={loading.skillCategories}>
@@ -1361,7 +1361,7 @@ const AdminPanel = () => {
                 <FaPen style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }} />
               </div>
               {status.projectsHeader && <p className={`status-message ${status.projectsHeader.type}`}>{status.projectsHeader.text}</p>}
-              
+
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
                 <div className="form-group">
                   <label style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 500 }}>Subtitle (e.g. What I've Built)</label>
@@ -1389,14 +1389,14 @@ const AdminPanel = () => {
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 600, marginBottom: '0.5rem' }}>
                     <FaPalette style={{ color: 'var(--text-secondary)' }} /> Highlight Style (or solid color)
                   </label>
-                  
+
                   <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                      <div style={{ 
-                        height: '100px', 
-                        background: projectsHeader.title_gradient || 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%)', 
-                        borderRadius: '8px', 
-                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' 
+                      <div style={{
+                        height: '100px',
+                        background: projectsHeader.title_gradient || 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%)',
+                        borderRadius: '8px',
+                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
                       }}></div>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         {[
@@ -1406,11 +1406,11 @@ const AdminPanel = () => {
                           'linear-gradient(135deg, #10B981 0%, #059669 100%)',
                           'linear-gradient(135deg, #6B7280 0%, #374151 100%)'
                         ].map((grad, i) => (
-                          <div 
+                          <div
                             key={i}
                             onClick={() => setProjectsHeader({ ...projectsHeader, title_gradient: grad })}
-                            style={{ 
-                              width: '32px', height: '24px', borderRadius: '6px', background: grad, 
+                            style={{
+                              width: '32px', height: '24px', borderRadius: '6px', background: grad,
                               cursor: 'pointer', border: projectsHeader.title_gradient === grad ? '2px solid #2563EB' : '1px solid var(--border-color)',
                               boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
                             }}
@@ -1418,37 +1418,37 @@ const AdminPanel = () => {
                         ))}
                       </div>
                     </div>
-                    
+
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '130px' }}>
-                      <button 
+                      <button
                         onClick={() => setShowProjectsGradientInput(!showProjectsGradientInput)}
-                        style={{ 
-                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'var(--bg-primary)', 
-                          border: '1px solid var(--border-color)', padding: '0.5rem 0.8rem', borderRadius: '6px', 
-                          fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, color: 'var(--text-primary)' 
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'var(--bg-primary)',
+                          border: '1px solid var(--border-color)', padding: '0.5rem 0.8rem', borderRadius: '6px',
+                          fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, color: 'var(--text-primary)'
                         }}>
                         <FaPalette style={{ color: '#ec4899', fontSize: '1rem' }} /> Edit
                       </button>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>Customize or select a preset.</span>
                     </div>
                   </div>
-                  
+
                   {showProjectsGradientInput && (
-                    <input 
+                    <input
                       style={{ marginTop: '1rem', padding: '0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', width: '100%' }}
-                      value={projectsHeader.title_gradient || ''} 
-                      onChange={(e) => setProjectsHeader({ ...projectsHeader, title_gradient: e.target.value })} 
-                      placeholder="e.g. linear-gradient(to right, #ff0000, #00ff00)" 
+                      value={projectsHeader.title_gradient || ''}
+                      onChange={(e) => setProjectsHeader({ ...projectsHeader, title_gradient: e.target.value })}
+                      placeholder="e.g. linear-gradient(to right, #ff0000, #00ff00)"
                     />
                   )}
                 </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
-                <button 
-                  className="save-button" 
-                  onClick={saveProjectsHeader} 
-                  disabled={loading.projectsHeader} 
+                <button
+                  className="save-button"
+                  onClick={saveProjectsHeader}
+                  disabled={loading.projectsHeader}
                   style={{ background: '#3B82F6', color: '#fff', border: 'none', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '6px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', width: 'auto', minWidth: '120px', justifyContent: 'center' }}
                 >
                   <FaSave style={{ fontSize: '0.9rem' }} /> {loading.projectsHeader ? 'Saving...' : 'Save Header'}
@@ -1463,9 +1463,9 @@ const AdminPanel = () => {
             {status.projects && <p className={`status-message ${status.projects.type}`}>{status.projects.text}</p>}
             {projects.map((project, i) => {
               const tsItems = Array.isArray(project.tech_stack_json) ? project.tech_stack_json : [];
-              const tlItems = Array.isArray(project.timeline_json)   ? project.timeline_json   : [];
-              const lnItems = Array.isArray(project.learnings_json)  ? project.learnings_json  : [];
-              const imItems = Array.isArray(project.images_json)     ? project.images_json     : [];
+              const tlItems = Array.isArray(project.timeline_json) ? project.timeline_json : [];
+              const lnItems = Array.isArray(project.learnings_json) ? project.learnings_json : [];
+              const imItems = Array.isArray(project.images_json) ? project.images_json : [];
               const cardKey = project.id || `new-${i}`;
               const isCollapsed = collapsedProjects[cardKey] !== false; // default collapsed
 
@@ -1496,10 +1496,10 @@ const AdminPanel = () => {
                         ⭐ Featured
                       </span>
                     )}
-                    <button 
-                      style={{ 
-                        padding: '4px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem', 
-                        background: 'rgba(220, 38, 38, 0.12)', color: '#ef4444', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' 
+                    <button
+                      style={{
+                        padding: '4px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
+                        background: 'rgba(220, 38, 38, 0.12)', color: '#ef4444', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer'
                       }}
                       onClick={(e) => { e.stopPropagation(); removeListItem('projects', projects, setProjects, i, '/projects'); }}
                     >
@@ -1515,12 +1515,12 @@ const AdminPanel = () => {
                       <div style={{ background: 'var(--bg-primary)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                         <div style={{ padding: '1.2rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <FaStar style={{ color: '#6366f1', fontSize: '1.2rem' }} /> 
+                            <FaStar style={{ color: '#6366f1', fontSize: '1.2rem' }} />
                             <span style={{ fontWeight: 600, fontSize: '1.1rem', color: 'var(--text-primary)' }}>Basic Information</span>
                           </div>
                           <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer' }}>
                             <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Featured</span>
-                            <div 
+                            <div
                               onClick={() => hf('featured', !project.featured)}
                               style={{ width: '36px', height: '20px', background: project.featured ? '#10b981' : '#d1d5db', borderRadius: '20px', position: 'relative', transition: '0.3s' }}
                             >
@@ -1669,12 +1669,12 @@ const AdminPanel = () => {
                               <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Card Background Gradient</span>
                             </div>
                             <p style={{ margin: '0 0 1rem 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Set the gradient background for the entire project card.</p>
-                            
+
                             {/* Advanced Color Selectors for Gradient */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.2rem' }}>
                               <div>
                                 <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.4rem', fontWeight: 600 }}>Gradient Start Color</label>
-                                <PopoverColorPicker 
+                                <PopoverColorPicker
                                   color={(project.gradient || '').match(/#[0-9a-fA-F]{3,6}/g)?.[0] || '#1a1040'}
                                   onChange={c => {
                                     const gradStr = project.gradient || '';
@@ -1689,7 +1689,7 @@ const AdminPanel = () => {
                               </div>
                               <div>
                                 <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.4rem', fontWeight: 600 }}>Gradient End Color</label>
-                                <PopoverColorPicker 
+                                <PopoverColorPicker
                                   color={(project.gradient || '').match(/#[0-9a-fA-F]{3,6}/g)?.pop() || '#1e3a5f'}
                                   onChange={c => {
                                     const gradStr = project.gradient || '';
@@ -1703,15 +1703,15 @@ const AdminPanel = () => {
                                 />
                               </div>
                             </div>
-                            
+
                             <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
-                              <input 
-                                value={project.gradient || ''} 
-                                onChange={e => hf('gradient', e.target.value)} 
-                                style={{ flex: 1, minWidth: '200px', padding: '0.7rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'var(--bg-primary)' }} 
+                              <input
+                                value={project.gradient || ''}
+                                onChange={e => hf('gradient', e.target.value)}
+                                style={{ flex: 1, minWidth: '200px', padding: '0.7rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'var(--bg-primary)' }}
                                 placeholder="linear-gradient(135deg, #1a1040 0%, #312e81 50%, #1e3a5f 100%)"
                               />
-                              <button 
+                              <button
                                 onClick={(e) => {
                                   e.preventDefault();
                                   const hue1 = Math.floor(Math.random() * 360);
@@ -1730,10 +1730,10 @@ const AdminPanel = () => {
                                 }}
                                 style={{ background: '#f3e8ff', color: '#7c3aed', border: 'none', padding: '0.7rem 1.2rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', whiteSpace: 'nowrap' }}
                               >
-                                <FaLightbulb style={{ fontSize: '0.8rem' }}/> AI Suggest
+                                <FaLightbulb style={{ fontSize: '0.8rem' }} /> AI Suggest
                               </button>
                             </div>
-                            
+
                             <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
                               {[
                                 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
@@ -1745,8 +1745,8 @@ const AdminPanel = () => {
                                 'linear-gradient(135deg, #2e0249 0%, #a91079 100%)',
                                 'linear-gradient(135deg, #093028 0%, #237A57 100%)'
                               ].map(grad => (
-                                <div 
-                                  key={grad} 
+                                <div
+                                  key={grad}
                                   onClick={() => hf('gradient', grad)}
                                   style={{ width: '36px', height: '36px', borderRadius: '8px', background: grad, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(0,0,0,0.1)' }}
                                 >
@@ -1755,7 +1755,7 @@ const AdminPanel = () => {
                               ))}
                             </div>
                           </div>
-                          
+
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
                             {/* Accent A */}
                             <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.2rem' }}>
@@ -1764,18 +1764,18 @@ const AdminPanel = () => {
                                 <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Accent Color A (Primary)</span>
                               </div>
                               <p style={{ margin: '0 0 1rem 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Used for label badges, tag borders, button glow, and orb highlight.</p>
-                              
+
                               <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', marginBottom: '1.2rem' }}>
                                 <div style={{ flex: 1 }}>
-                                  <PopoverColorPicker 
-                                    color={project.accent_a || '#697381'} 
-                                    onChange={c => hf('accent_a', c)} 
+                                  <PopoverColorPicker
+                                    color={project.accent_a || '#697381'}
+                                    onChange={c => hf('accent_a', c)}
                                     inputStyle={{ padding: '0.7rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'var(--bg-primary)' }}
                                     customSwatchStyle={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', zIndex: 1 }}
                                     customColorStyle={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid var(--border-color)' }}
                                   />
                                 </div>
-                                <button 
+                                <button
                                   onClick={(e) => {
                                     e.preventDefault();
                                     const rHue = Math.floor(Math.random() * 360);
@@ -1793,14 +1793,14 @@ const AdminPanel = () => {
                                   }}
                                   style={{ background: '#f3e8ff', color: '#7c3aed', border: 'none', padding: '0.7rem 1rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', whiteSpace: 'nowrap' }}
                                 >
-                                  <FaLightbulb style={{ fontSize: '0.8rem' }}/> AI Suggest
+                                  <FaLightbulb style={{ fontSize: '0.8rem' }} /> AI Suggest
                                 </button>
                               </div>
-                              
+
                               <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
                                 {['#6366f1', '#3b82f6', '#14b8a6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#697381'].map(color => (
-                                  <div 
-                                    key={color} 
+                                  <div
+                                    key={color}
                                     onClick={() => hf('accent_a', color)}
                                     style={{ width: '32px', height: '32px', borderRadius: '8px', background: color, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                   >
@@ -1809,7 +1809,7 @@ const AdminPanel = () => {
                                 ))}
                               </div>
                             </div>
-                            
+
                             {/* Accent B */}
                             <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.2rem' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
@@ -1817,18 +1817,18 @@ const AdminPanel = () => {
                                 <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Accent Color B (Secondary)</span>
                               </div>
                               <p style={{ margin: '0 0 1rem 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Used for the second decorative orb colour on the card.</p>
-                              
+
                               <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', marginBottom: '1.2rem' }}>
                                 <div style={{ flex: 1 }}>
-                                  <PopoverColorPicker 
-                                    color={project.accent_b || '#38bdf8'} 
-                                    onChange={c => hf('accent_b', c)} 
+                                  <PopoverColorPicker
+                                    color={project.accent_b || '#38bdf8'}
+                                    onChange={c => hf('accent_b', c)}
                                     inputStyle={{ padding: '0.7rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'var(--bg-primary)' }}
                                     customSwatchStyle={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', zIndex: 1 }}
                                     customColorStyle={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid var(--border-color)' }}
                                   />
                                 </div>
-                                <button 
+                                <button
                                   onClick={(e) => {
                                     e.preventDefault();
                                     const rHue = Math.floor(Math.random() * 360);
@@ -1846,14 +1846,14 @@ const AdminPanel = () => {
                                   }}
                                   style={{ background: '#f3e8ff', color: '#7c3aed', border: 'none', padding: '0.7rem 1rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', whiteSpace: 'nowrap' }}
                                 >
-                                  <FaLightbulb style={{ fontSize: '0.8rem' }}/> AI Suggest
+                                  <FaLightbulb style={{ fontSize: '0.8rem' }} /> AI Suggest
                                 </button>
                               </div>
-                              
+
                               <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
                                 {['#6366f1', '#3b82f6', '#14b8a6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#697381'].map(color => (
-                                  <div 
-                                    key={color} 
+                                  <div
+                                    key={color}
                                     onClick={() => hf('accent_b', color)}
                                     style={{ width: '32px', height: '32px', borderRadius: '8px', background: color, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                   >
@@ -1870,11 +1870,11 @@ const AdminPanel = () => {
                               <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)' }}>Live Preview</span>
                             </div>
                             <p style={{ margin: '0 0 1rem 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>See how your selected colors will look on the project card.</p>
-                            
+
                             {/* Preview Card */}
-                            <div style={{ 
-                              background: project.gradient || 'linear-gradient(135deg, #1a1040 0%, #312e81 50%, #1e3a5f 100%)', 
-                              borderRadius: '16px', 
+                            <div style={{
+                              background: project.gradient || 'linear-gradient(135deg, #1a1040 0%, #312e81 50%, #1e3a5f 100%)',
+                              borderRadius: '16px',
                               padding: '2.5rem 2rem',
                               position: 'relative',
                               overflow: 'hidden',
@@ -1885,23 +1885,23 @@ const AdminPanel = () => {
                               boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
                             }}>
                               {/* Orbs */}
-                              <div style={{ 
-                                position: 'absolute', top: '10%', right: '15%', width: '120px', height: '120px', 
+                              <div style={{
+                                position: 'absolute', top: '10%', right: '15%', width: '120px', height: '120px',
                                 borderRadius: '50%', border: `1px solid ${project.accent_b || '#38bdf8'}`,
                                 background: `radial-gradient(circle, ${project.accent_a || '#697381'}44 0%, transparent 70%)`
                               }} />
-                              <div style={{ 
-                                position: 'absolute', bottom: '-20%', right: '-5%', width: '250px', height: '250px', 
+                              <div style={{
+                                position: 'absolute', bottom: '-20%', right: '-5%', width: '250px', height: '250px',
                                 borderRadius: '50%', border: `1px solid ${project.accent_a || '#697381'}44`
                               }} />
-                              
+
                               <div style={{ position: 'relative', zIndex: 1, maxWidth: '65%' }}>
-                                <span style={{ 
-                                  background: 'rgba(255,255,255,0.1)', 
-                                  color: '#e5e7eb', 
-                                  padding: '4px 12px', 
-                                  borderRadius: '20px', 
-                                  fontSize: '0.75rem' 
+                                <span style={{
+                                  background: 'rgba(255,255,255,0.1)',
+                                  color: '#e5e7eb',
+                                  padding: '4px 12px',
+                                  borderRadius: '20px',
+                                  fontSize: '0.75rem'
                                 }}>
                                   Featured Project
                                 </span>
@@ -1911,14 +1911,14 @@ const AdminPanel = () => {
                                 <p style={{ color: '#d1d5db', fontSize: '0.9rem', lineHeight: '1.6', margin: '0 0 1.5rem 0' }}>
                                   {project.short_desc || 'This is a short description of the project that showcases how the colors look on the card.'}
                                 </p>
-                                
+
                                 <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
                                   {['React', 'Node.js', 'MongoDB'].map(tag => (
-                                    <span key={tag} style={{ 
-                                      border: `1px solid ${project.accent_a || '#697381'}`, 
-                                      color: '#e5e7eb', 
-                                      padding: '4px 14px', 
-                                      borderRadius: '16px', 
+                                    <span key={tag} style={{
+                                      border: `1px solid ${project.accent_a || '#697381'}`,
+                                      color: '#e5e7eb',
+                                      padding: '4px 14px',
+                                      borderRadius: '16px',
                                       fontSize: '0.75rem',
                                       background: 'rgba(255,255,255,0.05)'
                                     }}>
@@ -1926,26 +1926,26 @@ const AdminPanel = () => {
                                     </span>
                                   ))}
                                 </div>
-                                
+
                                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                                  <button style={{ 
-                                    background: 'transparent', 
-                                    color: '#fff', 
-                                    border: `1px solid ${project.accent_a || '#697381'}`, 
-                                    padding: '0.6rem 1.5rem', 
-                                    borderRadius: '8px', 
+                                  <button style={{
+                                    background: 'transparent',
+                                    color: '#fff',
+                                    border: `1px solid ${project.accent_a || '#697381'}`,
+                                    padding: '0.6rem 1.5rem',
+                                    borderRadius: '8px',
                                     fontWeight: 600,
                                     cursor: 'pointer',
                                     fontSize: '0.85rem'
                                   }}>
-                                    View Project <FaExternalLinkAlt style={{ fontSize: '0.7rem', marginLeft: '0.4rem' }}/>
+                                    View Project <FaExternalLinkAlt style={{ fontSize: '0.7rem', marginLeft: '0.4rem' }} />
                                   </button>
-                                  <button style={{ 
-                                    background: project.accent_b || '#3b82f6', 
-                                    color: '#fff', 
-                                    border: 'none', 
-                                    padding: '0.6rem 1.5rem', 
-                                    borderRadius: '8px', 
+                                  <button style={{
+                                    background: project.accent_b || '#3b82f6',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '0.6rem 1.5rem',
+                                    borderRadius: '8px',
                                     fontWeight: 600,
                                     cursor: 'pointer',
                                     fontSize: '0.85rem'
@@ -1968,23 +1968,23 @@ const AdminPanel = () => {
                           </div>
                           <span style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.7)' }}>Shown when visitor clicks "See More"</span>
                         </div>
-                        
+
                         {/* Body */}
                         <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                          
+
                           {/* Overview Card */}
                           <div>
                             <div style={{ background: 'var(--bg-primary)', borderRadius: '8px', padding: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
                               <h4 style={{ margin: '0 0 0.6rem 0', color: 'var(--text-primary)', fontSize: '1.05rem', fontWeight: 700 }}>Overview</h4>
-                              <textarea 
-                                value={project.overview || ''} 
-                                onChange={e => hf('overview', e.target.value)} 
-                                style={{ 
-                                  width: '100%', height: '80px', border: '1.5px solid #c2a673', borderRadius: '6px', 
-                                  padding: '1rem', fontFamily: 'Consolas, Monaco, "Courier New", monospace', fontSize: '0.9rem', 
+                              <textarea
+                                value={project.overview || ''}
+                                onChange={e => hf('overview', e.target.value)}
+                                style={{
+                                  width: '100%', height: '80px', border: '1.5px solid #c2a673', borderRadius: '6px',
+                                  padding: '1rem', fontFamily: 'Consolas, Monaco, "Courier New", monospace', fontSize: '0.9rem',
                                   color: 'var(--text-primary)', resize: 'vertical', outline: 'none'
-                                }} 
-                                placeholder="Describe what the project is, what it does, and who would use it. Aim for 3-5 sentences." 
+                                }}
+                                placeholder="Describe what the project is, what it does, and who would use it. Aim for 3-5 sentences."
                               />
                             </div>
                             <small style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.75rem', marginTop: '0.4rem', marginLeft: '0.2rem' }}>Big intro paragraph at the top of the detail page</small>
@@ -1992,20 +1992,20 @@ const AdminPanel = () => {
 
                           {/* Grid for Problem & Solution */}
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-                            
+
                             {/* The Problem */}
                             <div>
                               <div style={{ background: 'var(--bg-primary)', borderRadius: '8px', padding: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
                                 <h4 style={{ margin: '0 0 0.6rem 0', color: 'var(--text-primary)', fontSize: '1.05rem', fontWeight: 700 }}>The Problem</h4>
-                                <textarea 
-                                  value={project.problem || ''} 
-                                  onChange={e => hf('problem', e.target.value)} 
-                                  style={{ 
-                                    width: '100%', height: '80px', border: '1.5px solid #c2a673', borderRadius: '6px', 
-                                    padding: '1rem', fontFamily: 'Consolas, Monaco, "Courier New", monospace', fontSize: '0.9rem', 
+                                <textarea
+                                  value={project.problem || ''}
+                                  onChange={e => hf('problem', e.target.value)}
+                                  style={{
+                                    width: '100%', height: '80px', border: '1.5px solid #c2a673', borderRadius: '6px',
+                                    padding: '1rem', fontFamily: 'Consolas, Monaco, "Courier New", monospace', fontSize: '0.9rem',
                                     color: 'var(--text-primary)', resize: 'vertical', outline: 'none'
-                                  }} 
-                                  placeholder={"What pain point or challenge prompted this project?\nWhat was wrong before?"} 
+                                  }}
+                                  placeholder={"What pain point or challenge prompted this project?\nWhat was wrong before?"}
                                 />
                               </div>
                               <small style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.75rem', marginTop: '0.4rem', marginLeft: '0.2rem' }}>Shown in a side-by-side block with "The Solution"</small>
@@ -2015,28 +2015,28 @@ const AdminPanel = () => {
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                               <div style={{ background: 'var(--bg-primary)', borderRadius: '8px', padding: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
                                 <h4 style={{ margin: '0 0 0.6rem 0', color: 'var(--text-primary)', fontSize: '1.05rem', fontWeight: 700 }}>The Solution</h4>
-                                <textarea 
-                                  value={project.solution || ''} 
-                                  onChange={e => hf('solution', e.target.value)} 
-                                  style={{ 
-                                    width: '100%', height: '80px', border: '1.5px solid #c2a673', borderRadius: '6px', 
-                                    padding: '1rem', fontFamily: 'Consolas, Monaco, "Courier New", monospace', fontSize: '0.9rem', 
+                                <textarea
+                                  value={project.solution || ''}
+                                  onChange={e => hf('solution', e.target.value)}
+                                  style={{
+                                    width: '100%', height: '80px', border: '1.5px solid #c2a673', borderRadius: '6px',
+                                    padding: '1rem', fontFamily: 'Consolas, Monaco, "Courier New", monospace', fontSize: '0.9rem',
                                     color: 'var(--text-primary)', resize: 'vertical', outline: 'none'
-                                  }} 
-                                  placeholder={"How did your project solve the problem? What approach\ndid you take?"} 
+                                  }}
+                                  placeholder={"How did your project solve the problem? What approach\ndid you take?"}
                                 />
                               </div>
-                              
+
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: '0.4rem' }}>
                                 <small style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', marginLeft: '0.2rem' }}>Explains your approach and why it works</small>
-                                <button 
+                                <button
                                   onClick={(e) => {
                                     e.preventDefault();
                                     const normalizeProject = (p) => ({ ...p, tech_stack_json: p.tech_stack_json, timeline_json: p.timeline_json, learnings_json: p.learnings_json });
                                     saveCollection('projects', projects, setProjects, '/projects', normalizeProject)();
                                   }}
-                                  style={{ 
-                                    background: '#6d28d9', color: '#ffffff', border: 'none', borderRadius: '6px', 
+                                  style={{
+                                    background: '#6d28d9', color: '#ffffff', border: 'none', borderRadius: '6px',
                                     padding: '0.4rem 0.8rem', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
                                     boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
                                   }}
@@ -2045,7 +2045,7 @@ const AdminPanel = () => {
                                 </button>
                               </div>
                             </div>
-                            
+
                           </div>
                         </div>
                       </div>
@@ -2153,23 +2153,23 @@ const AdminPanel = () => {
               );
             })}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem', marginBottom: '1rem' }}>
-              <button 
+              <button
                 onClick={() => {
                   setProjects(prev => [...prev, { ...newItem.projects, id: `new-${Date.now()}` }]);
                   const newKey = `new-${projects.length}`;
                   setCollapsedProjects(prev => ({ ...prev, [newKey]: false }));
                 }}
-                style={{ 
-                  background: '#ecfdf5', color: '#059669', border: '1.5px dashed #34d399', 
-                  padding: '0 1.5rem', borderRadius: '8px', fontWeight: 600, 
+                style={{
+                  background: '#ecfdf5', color: '#059669', border: '1.5px dashed #34d399',
+                  padding: '0 1.5rem', borderRadius: '8px', fontWeight: 600,
                   fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem',
                   height: '48px', transition: 'all 0.2s'
                 }}
               >
                 <FaPlus /> Add New Project
               </button>
-              
-              <button 
+
+              <button
                 onClick={saveCollection('projects', projects, setProjects, '/projects', (p) => ({
                   ...p,
                   tech_stack_json: p.tech_stack_json || [],
@@ -2179,12 +2179,12 @@ const AdminPanel = () => {
                   show_github: p.show_github !== undefined ? p.show_github : true,
                   show_demo: p.show_demo !== undefined ? p.show_demo : true,
                   show_details: p.show_details !== undefined ? p.show_details : true
-                }))} 
+                }))}
                 disabled={loading.projects}
-                style={{ 
+                style={{
                   background: 'linear-gradient(90deg, #14b8a6 0%, #3b82f6 50%, #8b5cf6 100%)', // matching the vivid blue/purple gradient
-                  color: '#ffffff', border: 'none', 
-                  padding: '0 2.5rem', borderRadius: '8px', fontWeight: 600, 
+                  color: '#ffffff', border: 'none',
+                  padding: '0 2.5rem', borderRadius: '8px', fontWeight: 600,
                   fontSize: '0.95rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem',
                   boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)',
                   height: '48px', minWidth: '240px', justifyContent: 'center',
@@ -2268,11 +2268,11 @@ const AdminPanel = () => {
         {activeTab === 'Education' && (
           <section className="admin-section">
             {status.education && <p className={`status-message ${status.education.type}`}>{status.education.text}</p>}
-            
+
             {education.map((edu, i) => (
               <div key={edu.id || i} style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.5rem', marginBottom: '1.5rem', background: 'var(--bg-secondary)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                  
+
                   {/* Degree */}
                   <div className="form-group" style={{ margin: 0 }}>
                     <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>Degree</label>
@@ -2312,22 +2312,22 @@ const AdminPanel = () => {
                   {/* Current Study Toggle */}
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', marginTop: '0.2rem', width: 'fit-content' }}>
                     <div style={{
-                      position: 'relative', width: '36px', height: '20px', 
-                      backgroundColor: edu.current ? '#3b82f6' : '#d1d5db', 
+                      position: 'relative', width: '36px', height: '20px',
+                      backgroundColor: edu.current ? '#3b82f6' : '#d1d5db',
                       borderRadius: '20px', transition: 'background-color 0.2s'
                     }}>
                       <div style={{
-                        position: 'absolute', top: '2px', left: edu.current ? '18px' : '2px', 
-                        width: '16px', height: '16px', backgroundColor: '#fff', 
+                        position: 'absolute', top: '2px', left: edu.current ? '18px' : '2px',
+                        width: '16px', height: '16px', backgroundColor: '#fff',
                         borderRadius: '50%', transition: 'left 0.2s',
                         boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
                       }} />
                     </div>
-                    <input 
-                      type="checkbox" 
-                      checked={!!edu.current} 
-                      onChange={(e) => handleListField(setEducation, i, 'current', e.target.checked)} 
-                      style={{ display: 'none' }} 
+                    <input
+                      type="checkbox"
+                      checked={!!edu.current}
+                      onChange={(e) => handleListField(setEducation, i, 'current', e.target.checked)}
+                      style={{ display: 'none' }}
                     />
                     <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 500 }}>Current study</span>
                   </label>
@@ -2337,10 +2337,10 @@ const AdminPanel = () => {
                     <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>Description</label>
                     <textarea value={edu.description || ''} onChange={(e) => handleListField(setEducation, i, 'description', e.target.value)} style={{ width: '100%', minHeight: '90px', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)', resize: 'vertical' }} />
                   </div>
-                  
+
                   {/* Remove Button for this entry */}
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
-                    <button 
+                    <button
                       onClick={() => removeListItem('education', education, setEducation, i, '/education')}
                       style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
                     >
@@ -2350,17 +2350,17 @@ const AdminPanel = () => {
                 </div>
               </div>
             ))}
-            
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
-              <button 
+              <button
                 onClick={() => addListItem(setEducation, 'education')}
                 style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '0.6rem 1.2rem', borderRadius: '6px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
               >
                 <FaPlus /> Add education
               </button>
-              
-              <button 
-                onClick={saveCollection('education', education, setEducation, '/education', normalizeEducation)} 
+
+              <button
+                onClick={saveCollection('education', education, setEducation, '/education', normalizeEducation)}
                 disabled={loading.education}
                 style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0.6rem 1.5rem', borderRadius: '6px', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
               >
