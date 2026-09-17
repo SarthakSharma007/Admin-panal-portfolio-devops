@@ -14,9 +14,12 @@ const storage = multer.diskStorage({
     // Save uploads to the portfolio server's uploads folder so the portfolio
     // frontend (port 5000) can serve them. Falls back to this server's own
     // uploads dir if the env var is not set.
+    const defaultLocalUploads = path.join(__dirname, '..', 'uploads');
     const portfolioUploadsPath = process.env.PORTFOLIO_UPLOADS_PATH
       ? path.resolve(process.env.PORTFOLIO_UPLOADS_PATH)
-      : path.join(__dirname, '..', '..', '..', 'Personal-portfolio-webpage-devops', 'server', 'uploads');
+      : (process.env.NODE_ENV === 'production'
+          ? defaultLocalUploads
+          : path.join(__dirname, '..', '..', '..', 'Personal-portfolio-webpage-devops', 'server', 'uploads'));
     const uploadPath = portfolioUploadsPath;
     const fs = require('fs');
     if (!fs.existsSync(uploadPath)) {
@@ -31,18 +34,18 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-    storage: storage,
-    limits: { fileSize: 15 * 1024 * 1024 }, // 15MB limit
-    fileFilter: (req, file, cb) => {
-        // Allow images and PDF documents
-        const filetypes = /jpeg|jpg|png|gif|webp|pdf/;
-        const mimetype = /jpeg|jpg|png|gif|webp|pdf/.test(file.mimetype) || file.mimetype === 'application/pdf';
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-        if (mimetype && extname) {
-            return cb(null, true);
-        }
-        cb(new Error("Error: File upload only supports images (JPEG, PNG, GIF, WebP) and PDF documents."));
+  storage: storage,
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB limit
+  fileFilter: (req, file, cb) => {
+    // Allow images and PDF documents
+    const filetypes = /jpeg|jpg|png|gif|webp|pdf/;
+    const mimetype = /jpeg|jpg|png|gif|webp|pdf/.test(file.mimetype) || file.mimetype === 'application/pdf';
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    if (mimetype && extname) {
+      return cb(null, true);
     }
+    cb(new Error("Error: File upload only supports images (JPEG, PNG, GIF, WebP) and PDF documents."));
+  }
 });
 // --- End Multer Setup ---
 
@@ -190,7 +193,7 @@ router.put('/', auth, upload.fields([
       sql += `, about_image = ?`;
       updateFields.push(aboutImagePath);
     }
-    
+
     // Add the WHERE clause to complete the query
     sql += ` WHERE id = 1`;
 
@@ -198,10 +201,10 @@ router.put('/', auth, upload.fields([
     const [result] = await promisePool.execute(sql, updateFields);
 
     if (result.affectedRows > 0) {
-       // Fetch the updated data to send back to the client
-       // FIX: Changed to use promisePool.execute
-       const [rows] = await promisePool.execute('SELECT * FROM personal_info WHERE id = 1');
-       res.json({ success: true, message: 'Personal info updated', data: rows[0] });
+      // Fetch the updated data to send back to the client
+      // FIX: Changed to use promisePool.execute
+      const [rows] = await promisePool.execute('SELECT * FROM personal_info WHERE id = 1');
+      res.json({ success: true, message: 'Personal info updated', data: rows[0] });
     } else {
       res.status(404).json({ success: false, message: 'Personal info not found to update' });
     }

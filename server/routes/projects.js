@@ -9,10 +9,13 @@ const fs = require('fs');
 // --- Multer Setup for File Uploads ---
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    const defaultLocalUploads = path.join(__dirname, '..', 'uploads');
     const portfolioUploadsPath = process.env.PORTFOLIO_UPLOADS_PATH
       ? path.resolve(process.env.PORTFOLIO_UPLOADS_PATH)
-      : path.join(__dirname, '..', '..', '..', 'Personal-portfolio-webpage-devops', 'server', 'uploads');
-    
+      : (process.env.NODE_ENV === 'production'
+          ? defaultLocalUploads
+          : path.join(__dirname, '..', '..', '..', 'Personal-portfolio-webpage-devops', 'server', 'uploads'));
+
     if (!fs.existsSync(portfolioUploadsPath)) {
       fs.mkdirSync(portfolioUploadsPath, { recursive: true });
     }
@@ -42,7 +45,7 @@ const upload = multer({
 // Helper: parse JSON fields safely
 const parseProject = (row) => {
   try { row.tech_stack_json = row.tech_stack_json ? JSON.parse(row.tech_stack_json) : []; } catch { row.tech_stack_json = []; }
-  try { row.timeline_json  = row.timeline_json  ? JSON.parse(row.timeline_json)  : []; } catch { row.timeline_json  = []; }
+  try { row.timeline_json = row.timeline_json ? JSON.parse(row.timeline_json) : []; } catch { row.timeline_json = []; }
   try { row.learnings_json = row.learnings_json ? JSON.parse(row.learnings_json) : []; } catch { row.learnings_json = []; }
   try { row.images_json = row.images_json ? JSON.parse(row.images_json) : []; } catch { row.images_json = []; }
   return row;
@@ -124,7 +127,7 @@ router.post('/', auth, async (req, res) => {
     if (!title) return res.status(400).json({ success: false, message: 'Title is required' });
 
     const normalizedFeatured = featured === true || featured === 1 || featured === '1' ? 1 : 0;
-    const normalizedHero     = hero     === true || hero     === 1 || hero     === '1' ? 1 : 0;
+    const normalizedHero = hero === true || hero === 1 || hero === '1' ? 1 : 0;
 
     const [result] = await promisePool.execute(
       `INSERT INTO projects
@@ -138,10 +141,10 @@ router.post('/', auth, async (req, res) => {
         slug || null, num || null, label || null, short_desc || null, gradient || null, accent_a || null, accent_b || null, normalizedHero, card_size || 'Medium',
         overview || null, problem || null, solution || null,
         tech_stack_json ? JSON.stringify(tech_stack_json) : null,
-        timeline_json   ? JSON.stringify(timeline_json)   : null,
-        learnings_json  ? JSON.stringify(learnings_json)  : null,
+        timeline_json ? JSON.stringify(timeline_json) : null,
+        learnings_json ? JSON.stringify(learnings_json) : null,
         difficulty_level || 'Basic',
-        images_json     ? JSON.stringify(images_json)     : null,
+        images_json ? JSON.stringify(images_json) : null,
         show_github !== undefined ? show_github : true,
         show_demo !== undefined ? show_demo : true,
         show_details !== undefined ? show_details : true,
@@ -169,7 +172,7 @@ router.put('/:id', auth, async (req, res) => {
     if (!title) return res.status(400).json({ success: false, message: 'Title is required' });
 
     const normalizedFeatured = featured === true || featured === 1 || featured === '1' ? 1 : 0;
-    const normalizedHero     = hero     === true || hero     === 1 || hero     === '1' ? 1 : 0;
+    const normalizedHero = hero === true || hero === 1 || hero === '1' ? 1 : 0;
 
     const [result] = await promisePool.execute(
       `UPDATE projects SET
@@ -183,10 +186,10 @@ router.put('/:id', auth, async (req, res) => {
         slug || null, num || null, label || null, short_desc || null, gradient || null, accent_a || null, accent_b || null, normalizedHero, card_size || 'Medium',
         overview || null, problem || null, solution || null,
         tech_stack_json ? JSON.stringify(tech_stack_json) : null,
-        timeline_json   ? JSON.stringify(timeline_json)   : null,
-        learnings_json  ? JSON.stringify(learnings_json)  : null,
+        timeline_json ? JSON.stringify(timeline_json) : null,
+        learnings_json ? JSON.stringify(learnings_json) : null,
         difficulty_level || 'Basic',
-        images_json     ? JSON.stringify(images_json)     : null,
+        images_json ? JSON.stringify(images_json) : null,
         show_github !== undefined ? show_github : true,
         show_demo !== undefined ? show_demo : true,
         show_details !== undefined ? show_details : true,
